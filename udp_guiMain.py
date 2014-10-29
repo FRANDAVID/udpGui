@@ -5,12 +5,12 @@ import tkMessageBox
 import string
 import Pmw
 from udpTool import udpTool
-from WorkManager import WorkManager
+from upd_workManager import WorkManager
+from upd_workManager import Work
 import time
 import Queue
 
 
-    
 class udp(object):
     'udp class'
     def __init__(self,master):
@@ -18,16 +18,17 @@ class udp(object):
         master.configure(background = 'gray')
         # self.udptool = udpTool(133,135,8089)
         self.beginip=100
-        self.endip=134
+        self.endip=150
         self.contralLabel = Label(master,bg='gray', text='控制命令:')
         self.contralLabel.grid(row=1,column=1)
         self.cmdInt =1;
         self.cmdStr=StringVar() #wntime.com
         self.contralEntry = Entry(master,width=15,bg='gray',textvariable=self.cmdStr)
+        self.workManager = None
         tmp=  'wntime.com'+str(self.cmdInt)
         self.cmdStr.set(tmp)
         self.contralEntry.grid(row=1, column=2)
-
+        self.isRunable= True
         # 控制命令 下拉列表
         commandType = ('1', '2', '3', '4')
         dropdown = Pmw.ComboBox(
@@ -50,15 +51,20 @@ class udp(object):
         self.ipLabel = Label(master,bg='gray',text='192.168.2.1  ~~ 192.168.2.254')
         self.ipLabel.grid(row=0,column=2)
 
-
+        # 此方法是利用线程池做的ip地址发送
         self.sendButton = Button(master,fg='gray', text='接收', command=self.startReviceData)
         self.sendButton.grid(row=0, column=15)
+
+        # 此方法是利用生产者消费者模型做的不间断扫描
+        #self.sendButton2 = Button(master,fg='gray', text='多线程接收', command=self.startMuliThreadReviceData)
+        #self.sendButton2.grid(row=0, column=15)
+
+
 
         # self.sendButton.bind('<Button-1>', self.startReviceData)
 
         self.sendButton = Button(master,fg='gray', text='停止', command=self.stopReviceData)
         self.sendButton.grid(row=0, column=16)
-
 
         self.clearButton = Button(master,fg='gray', text='清空', command=self.clear)
         self.clearButton.grid(row=2, column=15,columnspan=4)
@@ -78,9 +84,6 @@ class udp(object):
         self.text.configure(yscrollcommand=self.sb.set)
         self.deviceListFrame.pack(fill=X,padx=5)
 
-        
-        #self.listbox = Listbox(master)
-        #self.listbox.grid(row=3,column=100)
 
     '监听下拉框改变函数'
     def selectCmdType(self,cmdInt):
@@ -95,13 +98,24 @@ class udp(object):
 
     '监听【接收数据】按钮 向设备进行数据发送'
     def startReviceData(self):
-        work_manager =  WorkManager(dataText=self.text,beginip=self.beginip,endip=self.endip)#或者work_manager =  WorkManager(10000, 20)
         self.text.insert(END, time.strftime('%H:%M:%S')+' 开始接收数据，请耐心等待...\n')
+        work_manager =  WorkManager(dataText=self.text,beginip=self.beginip,endip=self.endip)
 
     '监听【停止接收】按钮'
     def stopReviceData(self):
+        #self.product.stop()
+        #self.consumer.stop()
         self.text.insert(END, time.strftime('%H:%M:%S')+' 点击【接收】按钮开始接收数据\n')
+        self.isRunable=False
 
+    '开始多线程不间断接收数据信息'
+    def startMuliThreadReviceData(self):
+        self.product =  ProducerThread()
+        self.product.setDaemon(True)
+        self.consumer = ConsumerThread()
+        self.self.consumer.setDaemon(True)
+        self.product.start()
+        self.consumer.start();
 
     def getMailInfo(self):
         self.sendToAdd = self.sendToEntry.get().strip()

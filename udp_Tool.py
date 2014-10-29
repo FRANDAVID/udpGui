@@ -31,10 +31,10 @@ class udpTool(object):
                 reg = encodeData[1]
                 print 'encodeData',reg
                 print 'decodeData',rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')
-                
+
             except Exception, e:
                 continue
-            
+
         self.s.close()
     def runWithIp(self,iplist,s):
         print '程序开始循环ip地址192.168.2.2 ~~192.168.2.254'
@@ -52,10 +52,10 @@ class udpTool(object):
                 reg = encodeData[1]
                 print 'encodeData',reg
                 print 'decodeData',rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')
-                
+
             except Exception, e:
                 continue
-            
+
         self.s.close()
     '提供gui调用的socket 函数 由gui 负责循环ip'
     def runWithNoLoop(self,s,addr,port):
@@ -70,8 +70,8 @@ class udpTool(object):
         reg = encodeData[1]
         print 'encodeData',reg
         decodeData= rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')
-        print 'decodeData',rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')   
-        return decodeData     
+        print 'decodeData',rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')
+        return decodeData
     '停止发送试探数据'
     def stopSocket(self):
         self.s.close();
@@ -87,7 +87,7 @@ def runWithThread(s,addr,port):
         encodeData = data.split('param=');
         reg = encodeData[1]
         decodeData= rc4base64.RC4decode(rc4base64.base64decode(reg), 'wntime.com')
-        print '【',time.strftime('%H:%M:%S'),'】===>【',addr,'】数据', decodeData 
+        print '【',time.strftime('%H:%M:%S'),'】===>【',addr,'】数据', decodeData
         return decodeData
 if __name__=='__main__':
     udptool = udpTool(beginip=133,endip=137,port=8089)
