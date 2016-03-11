@@ -60,13 +60,13 @@ if __name__ == '__main__':
     # handle input file or stream
     import sys
     
-    # rc4("pm:25", "wntime.com", 0)
-    # RC4encode("pm:25", "wntime.com")
-    RC4decode("768ADF9A12","wntime.com")
-    print base64decode(base64encode(RC4decode("768ADF9A12","wntime.com")))
-    print base64encode(RC4encode("pm:25", "wntime.com"))
-    encodeData = base64encode(RC4encode("pm:25", "wntime.com"))
-    print RC4decode(base64decode(encodeData), 'wntime.com')
+    # rc4("pm:25", "aaa.com", 0)
+    # RC4encode("pm:25", "aaa.com")
+    RC4decode("768ADF9A12","aaa.com")
+    print base64decode(base64encode(RC4decode("768ADF9A12","aaa.com")))
+    print base64encode(RC4encode("pm:25", "aaa.com"))
+    encodeData = base64encode(RC4encode("pm:25", "aaa.com"))
+    print RC4decode(base64decode(encodeData), 'aaa.com')
 
 
 
